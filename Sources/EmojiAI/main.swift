@@ -5,13 +5,13 @@ import EmojiAICore
 struct EmojiAIMain {
     static func main() async {
         print("Starting EmojiAI...")
-        let repo = EmojiRepository()
         do {
-            try await repo.loadBuiltinCatalog()
-            let total = await repo.count()
-            print("Loaded \(total) emojis successfully.")
+            let repo = try EmojiRepository()
+            try await repo.initialize()
+            let total = try await repo.count()
+            print("Loaded \(total) emojis successfully in SQLite database.")
         } catch {
-            print("Failed to load catalog: \(error)")
+            print("Failed to initialize repository: \(error)")
         }
     }
 }

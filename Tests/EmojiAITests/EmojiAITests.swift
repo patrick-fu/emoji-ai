@@ -3,14 +3,15 @@ import Testing
 
 @Suite("EmojiAI Core Tests")
 struct EmojiAITests {
-    @Test("Test Built-in Catalog Loading and Search")
+    @Test("Test Built-in Catalog Loading and Search via SQLite")
     func testCatalogLoadingAndSearch() async throws {
-        let repo = EmojiRepository()
-        try await repo.loadBuiltinCatalog()
-        let total = await repo.count()
+        let memDb = try EmojiDatabase(path: ":memory:")
+        let repo = try EmojiRepository(database: memDb)
+        try await repo.initialize()
+        let total = try await repo.count()
         #expect(total > 1000)
 
-        let results = await repo.searchLocal(query: "smile")
+        let results = try await repo.searchLocal(query: "smile")
         #expect(!results.isEmpty)
         #expect(results.first?.symbol != nil)
     }
