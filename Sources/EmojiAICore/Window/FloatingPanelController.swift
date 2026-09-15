@@ -23,7 +23,7 @@ public final class FloatingPanelController {
     }
 
     public func toggle(target: NSRunningApplication? = nil) {
-        if panel.isVisible && panel.isKeyWindow {
+        if panel.isVisible {
             hide()
         } else {
             show(target: target)

@@ -1,17 +1,8 @@
 import Foundation
+import AppKit
 import EmojiAICore
 
-@main
-struct EmojiAIMain {
-    static func main() async {
-        print("Starting EmojiAI...")
-        do {
-            let repo = try EmojiRepository()
-            try await repo.initialize()
-            let total = try await repo.count()
-            print("Loaded \(total) emojis successfully in SQLite database.")
-        } catch {
-            print("Failed to initialize repository: \(error)")
-        }
-    }
-}
+let app = NSApplication.shared
+let delegate = AppDelegate.shared
+app.delegate = delegate
+_ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
