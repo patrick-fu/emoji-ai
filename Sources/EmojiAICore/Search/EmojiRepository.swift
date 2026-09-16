@@ -29,8 +29,27 @@ public actor EmojiRepository {
         self.isInitialized = true
     }
 
+    public static func locateEmojiCatalogURL() -> URL? {
+        let candidates: [URL?] = [
+            Bundle.main.resourceURL?.appendingPathComponent("EmojiAI_EmojiAICore.bundle"),
+            Bundle.main.resourceURL,
+            Bundle.main.bundleURL.appendingPathComponent("EmojiAI_EmojiAICore.bundle"),
+            Bundle.main.bundleURL
+        ]
+        for candidate in candidates.compactMap({ $0 }) {
+            if let bundle = Bundle(url: candidate), let url = bundle.url(forResource: "emoji", withExtension: "json") {
+                return url
+            }
+            let directFile = candidate.appendingPathComponent("emoji.json")
+            if FileManager.default.fileExists(atPath: directFile.path) {
+                return directFile
+            }
+        }
+        return Bundle.module.url(forResource: "emoji", withExtension: "json")
+    }
+
     public func loadBuiltinCatalog() throws {
-        guard let url = Bundle.module.url(forResource: "emoji", withExtension: "json") else {
+        guard let url = Self.locateEmojiCatalogURL() else {
             throw CocoaError(.fileNoSuchFile)
         }
         let data = try Data(contentsOf: url)
