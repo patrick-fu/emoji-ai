@@ -21,3 +21,7 @@ Icon
 # Secrets & Local Configurations
 .env
 *.local.json
+
+# Build and Release Artifacts
+dist/*.app
+dist/*.zip
